@@ -10,7 +10,7 @@ namespace FinalWebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsuariosController : ControllerBase
+    public class UsersController : ControllerBase
     {
 
 
@@ -18,20 +18,20 @@ namespace FinalWebApi.Controllers
         public IConfiguration _Configuration;
 
 
-        public UsuariosController(RestdotnetContext _contex, IConfiguration _config)
+        public UsersController(RestdotnetContext _contex, IConfiguration _config)
         {
             _dbcontex = _contex;
             _Configuration = _config;
         }
 
         [HttpPost]
-        [Route("Session")]
+        [Route("Login")]
         public IActionResult Session([FromBody] Usuario objeto)
         {
             try
             {
 
-                Usuario objUsr = _dbcontex.Usuarios.Where(u => u.Nombre == objeto.Nombre && u.Contraseña == objeto.Contraseña).FirstOrDefault();
+                Usuario objUsr = _dbcontex.Usuarios.Where(u => u.Email == objeto.Email && u.Contraseña == objeto.Contraseña).FirstOrDefault();
                 if (objUsr == null)
                 {
                     return NotFound("Credenciales Invalidas");
@@ -44,7 +44,7 @@ namespace FinalWebApi.Controllers
                     new Claim(JwtRegisteredClaimNames.Jti , Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Iat , DateTime.UtcNow.ToString()),
                     new Claim("Nombre", objeto.Nombre),
-                    new Claim("Perfil", objUsr.Perfil)
+                    new Claim("Email", objUsr.Email)
                 };
 
 

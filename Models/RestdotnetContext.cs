@@ -15,7 +15,7 @@ namespace FinalWebApi.Models
             : base(options)
         {
         }
-        public virtual DbSet<TempReg> TempRegs { get; set; } = null!;
+        public virtual DbSet<TemperatureRegs> TemperatureRegs { get; set; } = null!;
         public virtual DbSet<Usuario> Usuarios { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -24,7 +24,7 @@ namespace FinalWebApi.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TempReg>(entity =>
+            modelBuilder.Entity<TemperatureRegs>(entity =>
             {
                 entity.ToTable("TEMP_REG");
 
@@ -60,6 +60,8 @@ namespace FinalWebApi.Models
                 entity.Property(e => e.Nombre).HasMaxLength(50);
 
                 entity.Property(e => e.Perfil).HasMaxLength(50);
+
+                entity.Property(e => e.Email).HasMaxLength(50);
             });
 
             OnModelCreatingPartial(modelBuilder);

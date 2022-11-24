@@ -16,7 +16,7 @@ namespace FinalWebApi.Controllers
 					return false;
 				}
 
-                var perfil = identity.Claims.FirstOrDefault(x => x.Type == "Perfil");
+                var perfil = identity.Claims.FirstOrDefault(x => x.Type == "Email");
 
                 return true;
 

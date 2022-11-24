@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FinalWebApi.Models
 {
-    public partial class TempReg
+    public partial class TemperatureRegs
     {
         public int Id { get; set; }
         public DateTime? FechaRegistro { get; set; }

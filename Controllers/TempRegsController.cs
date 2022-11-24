@@ -12,13 +12,13 @@ using System.Collections;
 
 namespace FinalWebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]/Logs")]
     [ApiController]
-    public class TempRegsController : ControllerBase
+    public class TemperatureController : ControllerBase
     {
         private readonly RestdotnetContext _context;
 
-        public TempRegsController(RestdotnetContext context)
+        public TemperatureController(RestdotnetContext context)
         {
             _context = context;
         }
@@ -26,7 +26,7 @@ namespace FinalWebApi.Controllers
         // GET: api/TempRegs
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<TempReg>>> GetTempRegs()
+        public async Task<ActionResult<IEnumerable<TemperatureRegs>>> GetTempRegs()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
 
@@ -35,7 +35,7 @@ namespace FinalWebApi.Controllers
 
             try
             {
-                return await _context.TempRegs.ToListAsync();
+                return await _context.TemperatureRegs.ToListAsync();
             }
             catch (Exception ex)
             {
@@ -46,9 +46,9 @@ namespace FinalWebApi.Controllers
 
         // GET: api/TempRegs/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TempReg>> GetTempReg(int id)
+        public async Task<ActionResult<TemperatureRegs>> GetTempReg(int id)
         {
-            var tempReg = await _context.TempRegs.FindAsync(id);
+            var tempReg = await _context.TemperatureRegs.FindAsync(id);
 
             if (tempReg == null)
             {
@@ -61,7 +61,7 @@ namespace FinalWebApi.Controllers
         // PUT: api/TempRegs/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTempReg(int id, TempReg tempReg)
+        public async Task<IActionResult> PutTempReg(int id, TemperatureRegs tempReg)
         {
             if (id != tempReg.Id)
             {
@@ -92,9 +92,9 @@ namespace FinalWebApi.Controllers
         // POST: api/TempRegs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<TempReg>> PostTempReg(TempReg tempReg)
+        public async Task<ActionResult<TemperatureRegs>> PostTempReg(TemperatureRegs tempReg)
         {
-            _context.TempRegs.Add(tempReg);
+            _context.TemperatureRegs.Add(tempReg);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetTempReg", new { id = tempReg.Id }, tempReg);
@@ -104,13 +104,13 @@ namespace FinalWebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTempReg(int id)
         {
-            var tempReg = await _context.TempRegs.FindAsync(id);
+            var tempReg = await _context.TemperatureRegs.FindAsync(id);
             if (tempReg == null)
             {
                 return NotFound();
             }
 
-            _context.TempRegs.Remove(tempReg);
+            _context.TemperatureRegs.Remove(tempReg);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -118,7 +118,7 @@ namespace FinalWebApi.Controllers
 
         private bool TempRegExists(int id)
         {
-            return _context.TempRegs.Any(e => e.Id == id);
+            return _context.TemperatureRegs.Any(e => e.Id == id);
         }
     }
 }
