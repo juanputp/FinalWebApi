@@ -51,7 +51,7 @@ namespace FinalWebApi.Models
 
             modelBuilder.Entity<Usuario>(entity =>
             {
-                entity.HasNoKey();
+                entity.Property(e => e.Email).HasMaxLength(50);
 
                 entity.Property(e => e.Contraseña).HasMaxLength(50);
 
@@ -61,7 +61,10 @@ namespace FinalWebApi.Models
 
                 entity.Property(e => e.Perfil).HasMaxLength(50);
 
-                entity.Property(e => e.Email).HasMaxLength(50);
+                entity.HasKey(e => e.IdUsuario).HasName("PK_USUARIOS");
+
+                entity.HasKey(e => e.Email).HasName("PK_USUARIOS");
+
             });
 
             OnModelCreatingPartial(modelBuilder);

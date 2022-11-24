@@ -8,9 +8,9 @@ using System.Text;
 
 namespace FinalWebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/Users")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class LoginController : ControllerBase
     {
 
 
@@ -18,7 +18,7 @@ namespace FinalWebApi.Controllers
         public IConfiguration _Configuration;
 
 
-        public UsersController(RestdotnetContext _contex, IConfiguration _config)
+        public LoginController(RestdotnetContext _contex, IConfiguration _config)
         {
             _dbcontex = _contex;
             _Configuration = _config;
@@ -43,8 +43,9 @@ namespace FinalWebApi.Controllers
                     new Claim(JwtRegisteredClaimNames.Sub , jwt.Subject),
                     new Claim(JwtRegisteredClaimNames.Jti , Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Iat , DateTime.UtcNow.ToString()),
-                    new Claim("Nombre", objeto.Nombre),
-                    new Claim("Email", objUsr.Email)
+                    new Claim("Nombre", objUsr.Nombre),
+                    new Claim("Email", objUsr.Email),
+                    new Claim("Perfil", objUsr.Perfil)
                 };
 
 
@@ -69,9 +70,6 @@ namespace FinalWebApi.Controllers
             }
 
         }
-
-
-
 
     }
 }
