@@ -34,27 +34,41 @@ namespace FinalWebApi.Controllers
                 return StatusCode(StatusCodes.Status404NotFound, new { mensaje = "No se encontraron Datos" });
 
             }
-            
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Usuario>> GetUsuario(string id)
+        [Authorize]
+        public async Task<ActionResult<Usuario>> GetUsuario(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
-
-            if (usuario == null)
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var Valid = Funciones_Varias.ValidarToken(identity);
+            try
             {
-                return NotFound();
+                var usuario = await _context.Usuarios.FindAsync(id);
+
+                if (usuario == null)
+                {
+                    return NotFound();
+                }
+
+                return usuario;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status404NotFound, new { mensaje = "No se encontraron Datos" });
+
             }
 
-            return usuario;
         }
 
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsuario(string id, Usuario usuario)
+        [Authorize]
+        public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
         {
-            if (id != usuario.Email)
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var Valid = Funciones_Varias.ValidarToken(identity);
+
+            if (id != usuario.IdUsuario)
             {
                 return BadRequest();
             }
@@ -80,49 +94,43 @@ namespace FinalWebApi.Controllers
             return NoContent();
         }
 
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        [Route("SignUp")]
+        [HttpPost("SignUp")]
         public async Task<ActionResult<Usuario>> PostUsuario(Usuario usuario)
         {
             _context.Usuarios.Add(usuario);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (UsuarioExists(usuario.Email))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUsuario", new { id = usuario.Email }, usuario);
+            return CreatedAtAction("GetUsuario", new { id = usuario.IdUsuario }, usuario);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUsuario(string id)
+        [Authorize]
+        public async Task<IActionResult> DeleteUsuario(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario == null)
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var Valid = Funciones_Varias.ValidarToken(identity);
+            try
             {
-                return NotFound();
+                var usuario = await _context.Usuarios.FindAsync(id);
+                if (usuario == null)
+                {
+                    return NotFound();
+                }
+                _context.Usuarios.Remove(usuario);
+                await _context.SaveChangesAsync();
+                return NoContent();
             }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status404NotFound, new { mensaje = "No se encontraron Datos" });
 
-            _context.Usuarios.Remove(usuario);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            }
+            
         }
 
-        private bool UsuarioExists(string id)
+        private bool UsuarioExists(int id)
         {
-            return _context.Usuarios.Any(e => e.Email == id);
+            return _context.Usuarios.Any(e => e.IdUsuario == id);
         }
     }
 }

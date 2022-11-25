@@ -29,10 +29,7 @@ namespace FinalWebApi.Controllers
         public async Task<ActionResult<IEnumerable<TemperatureRegs>>> GetTempRegs()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-
             var Valid = Funciones_Varias.ValidarToken(identity);
-      
-
             try
             {
                 return await _context.TemperatureRegs.ToListAsync();
@@ -46,23 +43,35 @@ namespace FinalWebApi.Controllers
 
         // GET: api/TempRegs/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<TemperatureRegs>> GetTempReg(int id)
         {
-            var tempReg = await _context.TemperatureRegs.FindAsync(id);
-
-            if (tempReg == null)
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var Valid = Funciones_Varias.ValidarToken(identity);
+            try
             {
-                return NotFound();
-            }
+                var tempReg = await _context.TemperatureRegs.FindAsync(id);
 
-            return tempReg;
+                if (tempReg == null)
+                {
+                    return NotFound();
+                }
+
+                return tempReg;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status404NotFound, new { mensaje = "No se encontraron Datos" });
+            }
+            
         }
 
-        // PUT: api/TempRegs/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutTempReg(int id, TemperatureRegs tempReg)
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var Valid = Funciones_Varias.ValidarToken(identity);
             if (id != tempReg.Id)
             {
                 return BadRequest();
@@ -92,8 +101,11 @@ namespace FinalWebApi.Controllers
         // POST: api/TempRegs
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<TemperatureRegs>> PostTempReg(TemperatureRegs tempReg)
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var Valid = Funciones_Varias.ValidarToken(identity);
             _context.TemperatureRegs.Add(tempReg);
             await _context.SaveChangesAsync();
 
@@ -102,8 +114,11 @@ namespace FinalWebApi.Controllers
 
         // DELETE: api/TempRegs/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteTempReg(int id)
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var Valid = Funciones_Varias.ValidarToken(identity);
             var tempReg = await _context.TemperatureRegs.FindAsync(id);
             if (tempReg == null)
             {
